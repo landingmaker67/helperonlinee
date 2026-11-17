@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Помощник онлайн-обращений</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<main class="max-w-3xl mx-auto p-6">
+  <h1 class="text-4xl font-semibold mb-4 text-center">Реши онлайн-проблему быстро</h1>
+  <p class="mb-6 text-center">Если платформа не решает твою ситуацию — мы подскажем, куда и как обратиться.</p>
+
+  <section class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Опиши проблему</h2>
+    <form id="helpForm" class="space-y-4">
+      <div>
+        <label class="block mb-1">Платформа (например, Meta, Microsoft, интернет-провайдер)</label>
+        <input type="text" id="platform" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200">
+      </div>
+      <div>
+        <label class="block mb-1">Тип проблемы</label>
+        <select id="category" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200">
+          <option>Невозможность доступа / аккаунт</option>
+          <option>Сложности с жалобами / поддержкой</option>
+          <option>Ментальное давление / онлайн-агрессия</option>
+          <option>Другое</option>
+        </select>
+      </div>
+      <div>
+        <label class="block mb-1">Описание</label>
+        <textarea id="description" required class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200" rows="4" placeholder="Опиши подробнее ситуацию"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Получить помощь</button>
+    </form>
+  </section>
+
+  <section id="output" class="bg-white rounded-lg shadow p-6 hidden">
+    <h2 class="text-2xl font-semibold mb-4">Ссылка и шаблон для обращения</h2>
+    <p id="suggestion" class="mb-4"></p>
+    <button id="copyBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"><i class="fas fa-copy"></i> Копировать</button>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-2xl font-semibold mb-4">Почему это важно</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li>Много жалоб остаются без ответа — нужна помощь с эскалацией (<a href="https://uat.tio.com.au/news/digital-platform-enquiries-climb-as-people-struggle-to-get-help?utm_source=openai" class="text-blue-600 underline">источник</a>)</li>
+      <li>Отсутствие «живых» каналов поддержки создаёт стресс и снижает доверие к онлайн-сервисам (<a href="https://uat.tio.com.au/news/most-australians-stuck-stressed-or-silent-as-online-complaints-pile?utm_source=openai" class="text-blue-600 underline">источник</a>)</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+const form = document.getElementById('helpForm');
+const output = document.getElementById('output');
+const suggestion = document.getElementById('suggestion');
+const copyBtn = document.getElementById('copyBtn');
+
+const templates = {
+  "Невозможность доступа / аккаунт": (p) => `Пожалуйста, помогите восстановить доступ к аккаунту на ${p}. Я не могу войти, хотя использую правильные данные.`,
+  "Сложности с жалобами / поддержкой": (p) => `Я пытался обратиться в поддержку ${p}, но не получил ответа. Прошу помочь мне решить вопрос.`,
+  "Ментальное давление / онлайн-агрессия": (p) => `На ${p} я столкнулся с онлайн-агрессией/травлей. Прошу вас принять меры и поддержать меня.`,
+  "Другое": (p) => `У меня проблема на платформе ${p}. Прошу объяснить, как её решить.`
+};
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const p = document.getElementById('platform').value.trim();
+  const c = document.getElementById('category').value;
+  suggestion.textContent = templates[c](p);
+  output.classList.remove('hidden');
+});
+
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(suggestion.textContent).then(() => alert('Скопировано'));
+});
+</script>
+</body>
+</html>
